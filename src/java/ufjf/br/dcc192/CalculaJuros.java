@@ -58,25 +58,45 @@ public class CalculaJuros extends HttpServlet {
         out.println("<th> 1.5% </th> ");
         out.println("</thead>");
 
-        int n = 1;
-        for (int i = 0; i < 12; i++) {
-            double m1, m2, m3 = 0;
-            m1 = valorI * (1 + (n * 0.005));
-            m2 = valorI * (1 + (n * 0.01));
-            m3 = valorI * (1 + (n * 0.015));
+        double qntdMeses = Double.parseDouble(request.getParameter("meses"));
+        if (qntdMeses != 0) {
+            int n = 0;
+            for (int i = 1; i < qntdMeses; i++) {
+                double m1, m2, m3 = 0;
+                m1 = valorI * (1 + (i * 0.005));
+                m2 = valorI * (1 + (i * 0.01));
+                m3 = valorI * (1 + (i * 0.015));
 
-            out.println("<tr>");
-            out.println("<td>" + meses.get(i) + "</td>");
-            out.println("<td>" + m1 + "</td>");
-            out.println("<td>" + m2 + "</td>");
-            out.println("<td>" + m3 + "</td>");
-            out.println("</tr>");
-            
-            n++;
+                out.println("<tr>");
+                out.println("<td>" + meses.get(n) + "</td>");
+                out.println("<td>" + m1 + "</td>");
+                out.println("<td>" + m2 + "</td>");
+                out.println("<td>" + m3 + "</td>");
+                out.println("</tr>");
+
+                n++;
+            }
+        } else {
+            int n = 1;
+            for (int i = 0; i < 12; i++) {
+                double m1, m2, m3 = 0;
+                m1 = valorI * (1 + (n * 0.005));
+                m2 = valorI * (1 + (n * 0.01));
+                m3 = valorI * (1 + (n * 0.015));
+
+                out.println("<tr>");
+                out.println("<td>" + meses.get(i) + "</td>");
+                out.println("<td>" + m1 + "</td>");
+                out.println("<td>" + m2 + "</td>");
+                out.println("<td>" + m3 + "</td>");
+                out.println("</tr>");
+
+                n++;
+            }
+            out.println("</table>");
+            out.println("</body>");
+            out.println("</html>");
         }
-        out.println("</table>");
-        out.println("</body>");
-        out.println("</html>");
-    }
 
+    }
 }

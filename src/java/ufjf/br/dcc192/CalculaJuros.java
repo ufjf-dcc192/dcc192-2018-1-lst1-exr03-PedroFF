@@ -192,6 +192,7 @@ public class CalculaJuros extends HttpServlet {
                     m=0; 
             }
             out.println("</table>");
+            out.println("</form>");
             out.println("</body>");
             out.println("</html>");
         }

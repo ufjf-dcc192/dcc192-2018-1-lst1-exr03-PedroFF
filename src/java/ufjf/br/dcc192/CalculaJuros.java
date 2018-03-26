@@ -22,8 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet(name = "CalculaJuros", urlPatterns = {"/juros.html"})
 public class CalculaJuros extends HttpServlet {
 
-    private double valorI = 1000;
-    private double valorF = 1000 * (1 + (12 * 0.01));
+    private double valorI = 1000.0;
     private List<String> meses = new ArrayList<>();
 
     @Override
@@ -70,6 +69,7 @@ public class CalculaJuros extends HttpServlet {
         out.println("<title>Juros Simples</title>");
         out.println("</head>");
         out.println("<body>");
+        out.println("<form method='post'>");
         out.println("<table border='1'>");
 
         int qntdMeses;
@@ -94,7 +94,7 @@ public class CalculaJuros extends HttpServlet {
             out.println("<th> 1.5% </th> ");
             out.println("</thead>");
             int n = 1;
-            for (int i = 0; i < qntdMeses; i++) {
+            for (int i = 0; i < meses.size(); i++) {
                 double m1, m2, m3 = 0;
                 m1 = valorI * (1 + (n * 0.005));
                 m2 = valorI * (1 + (n * 0.01));
@@ -118,55 +118,6 @@ public class CalculaJuros extends HttpServlet {
             out.println("<th>" + (taxaJuros + 0.5) + "%</th> ");
             out.println("</thead>");
             int n = 1;
-            for (int i = 0; i < qntdMeses; i++) {
-                double m1, m2, m3 = 0;
-                m1 = valorI * (1 + (n * ((taxaJuros / 100) - (0.5 / 100))));
-                m2 = valorI * (1 + (n * (taxaJuros / 100)));
-                m3 = valorI * (1 + (n * (((taxaJuros / 100) + (0.5 / 100)))));
-
-                out.println("<tr>");
-                out.println("<td>" + meses.get(i) + "</td>");
-                out.println("<td>" + m1 + "</td>");
-                out.println("<td>" + m2 + "</td>");
-                out.println("<td>" + m3 + "</td>");
-                out.println("</tr>");
-
-                n++;
-
-            }
-        } else if (qntdMeses != 0 && taxaJuros == 0) {
-            out.println("<thead>");
-            out.println("<tr>");
-            out.println("<th> Mês </th> ");
-            out.println("<th> 0.5% </th> ");
-            out.println("<th> 1% </th> ");
-            out.println("<th> 1.5% </th> ");
-            out.println("</thead>");
-            int n = 1;
-            for (int i = 0; i < qntdMeses; i++) {
-                double m1, m2, m3 = 0;
-                m1 = valorI * (1 + (n * 0.005));
-                m2 = valorI * (1 + (n * 0.01));
-                m3 = valorI * (1 + (n * 0.015));
-
-                out.println("<tr>");
-                out.println("<td>" + meses.get(i) + "</td>");
-                out.println("<td>" + m1 + "</td>");
-                out.println("<td>" + m2 + "</td>");
-                out.println("<td>" + m3 + "</td>");
-                out.println("</tr>");
-
-                n++;
-            }
-        } else if (qntdMeses != 0 && taxaJuros != 0) {
-            out.println("<thead>");
-            out.println("<tr>");
-            out.println("<th> Mês </th> ");
-            out.println("<th>" + (taxaJuros - 0.5) + "%</th> ");
-            out.println("<th>" + taxaJuros + "%</th> ");
-            out.println("<th>" + (taxaJuros + 0.5) + "%</th> ");
-            out.println("</thead>");
-            int n = 1;
             for (int i = 0; i < meses.size(); i++) {
                 double m1, m2, m3 = 0;
                 m1 = valorI * (1 + (n * ((taxaJuros / 100) - (0.5 / 100))));
@@ -181,6 +132,64 @@ public class CalculaJuros extends HttpServlet {
                 out.println("</tr>");
 
                 n++;
+                
+
+            }
+        } else if (qntdMeses != 12 && taxaJuros == 0) {
+            out.println("<thead>");
+            out.println("<tr>");
+            out.println("<th> Mês </th> ");
+            out.println("<th> 0.5% </th> ");
+            out.println("<th> 1% </th> ");
+            out.println("<th> 1.5% </th> ");
+            out.println("</thead>");
+            int n = 1;
+            int m = 0;
+            for (int i = 0; i < qntdMeses; i++) {
+                double m1, m2, m3 = 0;
+                m1 = valorI * (1 + (n * 0.005));
+                m2 = valorI * (1 + (n * 0.01));
+                m3 = valorI * (1 + (n * 0.015));
+
+                out.println("<tr>");
+                out.println("<td>" + meses.get(m) + "</td>");
+                out.println("<td>" + m1 + "</td>");
+                out.println("<td>" + m2 + "</td>");
+                out.println("<td>" + m3 + "</td>");
+                out.println("</tr>");
+
+                n++;
+                m++;
+                if(m==12)
+                    m=0;     
+            }
+        } else if (qntdMeses != 12 && taxaJuros != 0) {
+            out.println("<thead>");
+            out.println("<tr>");
+            out.println("<th> Mês </th> ");
+            out.println("<th>" + (taxaJuros - 0.5) + "%</th> ");
+            out.println("<th>" + taxaJuros + "%</th> ");
+            out.println("<th>" + (taxaJuros + 0.5) + "%</th> ");
+            out.println("</thead>");
+            int n = 1;
+            int m = 0;
+            for (int i = 0; i < qntdMeses; i++) {
+                double m1, m2, m3 = 0;
+                m1 = valorI * (1 + (n * ((taxaJuros / 100) - (0.5 / 100))));
+                m2 = valorI * (1 + (n * (taxaJuros / 100)));
+                m3 = valorI * (1 + (n * (((taxaJuros / 100) + (0.5 / 100)))));
+
+                out.println("<tr>");
+                out.println("<td>" + meses.get(m) + "</td>");
+                out.println("<td>" + m1 + "</td>");
+                out.println("<td>" + m2 + "</td>");
+                out.println("<td>" + m3 + "</td>");
+                out.println("</tr>");
+
+                n++;
+                m++;
+                if(m==12)
+                    m=0; 
             }
             out.println("</table>");
             out.println("</body>");

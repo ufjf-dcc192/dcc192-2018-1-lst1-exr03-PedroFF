@@ -48,9 +48,9 @@ public class CalculaJuros extends HttpServlet {
         }
         double taxaJuros;
         if (request.getParameter("taxa") != null && !"".equals(request.getParameter("taxa"))) {
-            taxaJuros = Double.parseDouble(request.getParameter("taxa"));
+            taxaJuros = Double.parseDouble(request.getParameter("taxa"))/100;
         } else {
-            taxaJuros = 1 / 100;
+            taxaJuros = 1.0 / 100.0;
         }
 
         response.setContentType("text/html;charset=UTF-8");
@@ -71,17 +71,17 @@ public class CalculaJuros extends HttpServlet {
         out.println("<thead>");
         out.println("<tr>");
         out.println("<th> Mês </th> ");
-        out.println("<th> 0.5% </th> ");
-        out.println("<th> 1% </th> ");
-        out.println("<th> 1.5% </th> ");
+        out.println("<th>"+((taxaJuros*100)-0.5)+"% </th> ");
+        out.println("<th> "+(taxaJuros*100)+"% </th> ");
+        out.println("<th> "+((taxaJuros*100)+0.5)+"% </th> ");
         out.println("</thead>");
         int n = 1;
         int m = 0;
         for (int i = 0; i < qntdMeses; i++) {
             double m1, m2, m3 = 0;
-            m1 = valorI * (1 + (n * 0.005));
-            m2 = valorI * (1 + (n * 0.01));
-            m3 = valorI * (1 + (n * 0.015));
+            m1 = valorI * (1 + (n * (taxaJuros* 0.5)));
+            m2 = valorI * (1 + (n * taxaJuros));
+            m3 = valorI * (1 + (n * (taxaJuros * 1.5)));
 
             out.println("<tr>");
             out.println("<td>" + meses.get(m) + "</td>");

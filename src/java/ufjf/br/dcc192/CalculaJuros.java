@@ -7,6 +7,8 @@ package ufjf.br.dcc192;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -23,23 +25,12 @@ import javax.servlet.http.HttpServletResponse;
 public class CalculaJuros extends HttpServlet {
 
     private double valorI = 1000.0;
-    private List<String> meses = new ArrayList<>();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        meses.add("Janeiro");
-        meses.add("Fevereiro");
-        meses.add("Março");
-        meses.add("Abril");
-        meses.add("Maio");
-        meses.add("Junho");
-        meses.add("Julho");
-        meses.add("Agosto");
-        meses.add("Setembro");
-        meses.add("Outubro");
-        meses.add("Novembro");
-        meses.add("Dezembro");
 
+        LocalDate current = LocalDate.now();
+        DateTimeFormatter formatacao = DateTimeFormatter.ofPattern("MMMM/YYYY");
         int qntdMeses;
         if (request.getParameter("meses") != null && !"".equals(request.getParameter("meses"))) {
             qntdMeses = Integer.parseInt(request.getParameter("meses"));
@@ -48,7 +39,7 @@ public class CalculaJuros extends HttpServlet {
         }
         double taxaJuros;
         if (request.getParameter("taxa") != null && !"".equals(request.getParameter("taxa"))) {
-            taxaJuros = Double.parseDouble(request.getParameter("taxa"))/100;
+            taxaJuros = Double.parseDouble(request.getParameter("taxa")) / 100;
         } else {
             taxaJuros = 1.0 / 100.0;
         }
@@ -71,30 +62,24 @@ public class CalculaJuros extends HttpServlet {
         out.println("<thead>");
         out.println("<tr>");
         out.println("<th> Mês </th> ");
-        out.println("<th>"+((taxaJuros*100)-0.5)+"% </th> ");
-        out.println("<th> "+(taxaJuros*100)+"% </th> ");
-        out.println("<th> "+((taxaJuros*100)+0.5)+"% </th> ");
+        out.println("<th>" + ((taxaJuros * 100) - 0.5) + "% </th> ");
+        out.println("<th> " + (taxaJuros * 100) + "% </th> ");
+        out.println("<th> " + ((taxaJuros * 100) + 0.5) + "% </th> ");
         out.println("</thead>");
-        int n = 1;
-        int m = 0;
-        for (int i = 0; i < qntdMeses; i++) {
+        
+        for (int i = 1; i <= qntdMeses; i++) {
+            LocalDate mes = current.plusMonths(i);
             double m1, m2, m3 = 0;
-            m1 = valorI * (1 + (n * (taxaJuros* 0.5)));
-            m2 = valorI * (1 + (n * taxaJuros));
-            m3 = valorI * (1 + (n * (taxaJuros * 1.5)));
+            m1 = valorI * (1 + (i * (taxaJuros * 0.5)));
+            m2 = valorI * (1 + (i * taxaJuros));
+            m3 = valorI * (1 + (i * (taxaJuros * 1.5)));
 
             out.println("<tr>");
-            out.println("<td>" + meses.get(m) + "</td>");
+            out.println("<td>" + mes.format(formatacao) + "</td>");
             out.println("<td>" + m1 + "</td>");
             out.println("<td>" + m2 + "</td>");
             out.println("<td>" + m3 + "</td>");
             out.println("</tr>");
-
-            n++;
-            m++;
-            if(m == 12){
-            m=0;
-            }
 
         }
         out.println("</table>");
